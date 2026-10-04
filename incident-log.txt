@@ -1,0 +1,33 @@
+Server OS Midterm — Lab 01 (novapeak)
+Incident Log
+
+Final validation:
+python3 /root/grading/check_lab.py --group lab01 --phase build
+Result: TOTAL: 25.0 / 25
+
+Issues identified:
+1. api.novapeak.lab resolved to 192.168.19.1 instead of 192.168.19.40.
+2. DHCP advertised 8.8.8.8 instead of the company DNS server 192.168.19.10.
+3. Clients using the leased public resolver could not resolve the internal www.novapeak.lab name.
+
+Corrections applied:
+1. Updated /etc/bind/db.novapeak.lab:
+   api IN A 192.168.19.40
+2. Validated the forward zone:
+   named-checkzone novapeak.lab /etc/bind/db.novapeak.lab
+3. Restarted BIND:
+   systemctl restart bind9
+4. Verified live DNS:
+   dig @192.168.19.10 api.novapeak.lab A +noall +answer
+5. Updated /etc/dhcp/dhcpd.conf:
+   option domain-name-servers 192.168.19.10;
+6. Validated and restarted DHCP:
+   dhcpd -t -cf /etc/dhcp/dhcpd.conf
+   systemctl restart isc-dhcp-server
+7. Re-ran the grader successfully.
+
+Outcome:
+- BIND serves api.novapeak.lab as 192.168.19.40.
+- DHCP advertises 192.168.19.10.
+- The leased resolver resolves www.novapeak.lab.
+- Final checker score: 25.0 / 25.

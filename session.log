@@ -1,0 +1,24 @@
+Script started on 2026-10-04 17:48:23+00:00 [COMMAND="date; echo "=== BIND status ==="; systemctl is-active bind9; echo "=== DHCP status ==="; systemctl is-active isc-dhcp-server; echo "=== API DNS verification ==="; dig @192.168.19.10 api.novapeak.lab A +noall +answer; echo "=== Final grader ==="; python3 /root/grading/check_lab.py --group lab01 --phase build" TERM="xterm-256color" TTY="/dev/pts/10" COLUMNS="78" LINES="56"]
+Sun Oct  4 17:48:23 UTC 2026
+=== BIND status ===
+active
+=== DHCP status ===
+active
+=== API DNS verification ===
+api.novapeak.lab.	3600	IN	A	192.168.19.40
+=== Final grader ===
+  [   2/2 ] C4   named-checkconf -z clean; named-checkzone clean
+  [   2/2 ] C5   dhcpd -t clean; service running
+  [   2/2 ] C1   named is authoritative for novapeak.lab and reachable from the client.
+  [ 3.0/3 ] C2   all four A records correct
+  [   2/2 ] C3   reverse lookup of 192.168.19.10 returns ns1.
+  [   3/3 ] C6   client obtained a lease: 192.168.19.104
+  [ 2.0/2 ] C7   pool+netmask correct
+  [   2/2 ] C8   gateway advertised correctly
+  [   3/3 ] C9   DHCP advertises the company DNS (192.168.19.10)
+  [   1/1 ] C10  company domain advertised
+  [   3/3 ] C11  client resolves www via the leased resolver
+  --------------------------------------------------
+  TOTAL: 25.0 / 25
+
+Script done on 2026-10-04 17:48:30+00:00 [COMMAND_EXIT_CODE="0"]
